@@ -1,0 +1,98 @@
+body{
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container{
+    flex: 1;
+}
+.navbar{
+    height: 5rem;
+}
+
+/* Navbar*/
+.fa-location-dot{
+    color: #f13f3f;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: black !important;
+    font-size: 1.2rem;
+    font-weight: 500 !important;
+}
+
+/* Footer*/
+.f-info-links a{
+    color: black !important;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.f-info-links a:hover{
+    color: #f13f3f !important;
+    text-decoration: none;
+}
+
+.f-info{
+    height: 8rem;
+    background-color: #ebebeb;
+    justify-content: center;
+    align-items: space-evenly;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.f-info-links{
+    width: 100%;
+}
+.f-info-socials{
+    width: 100%;
+    font-size: 1.45rem;
+    padding-right: 2rem;
+}
+
+.listing-card{
+    margin-bottom: 2rem;
+    border: none !important;
+}
+
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-text p{
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    background-color: white;
+    opacity: 0.2;
+    transition: 0.2s ease-in-out;
+}
+
+/* Add a red asterisk to labels that indicate required fields */
+label.required::after{
+    content: " *";
+    color: #dc3545; /* bootstrap danger color */
+    margin-left: 0.25rem;
+}
+/*Show Page*/
+.show-img{
+    height: 30rem !important;
+    object-fit: cover !important;
+}
+/* .show-img:hover{
+    scale: 1.05 !important;
+    transition: 0.3s ease-in ease-out !important;
+} */
