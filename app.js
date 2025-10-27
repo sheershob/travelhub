@@ -8,8 +8,10 @@ const wrapAsync = require('./utils/wrapAsync');
 const ExpressError = require('./utils/ExpressError');
 const { listingSchema, reviewSchema } = require('./schema');
 const Review = require('./models/review');
+const session = require('express-session');
 // country-list exposes helper functions - use getNames() to get an array
 const { getNames, getCodes } = require('country-list');
+const flash = require('connect-flash');
 
 const app = express(); 
 
@@ -21,25 +23,57 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
 
 const validateListing = (req, res, next) => {
-    let { error } = listingSchema.validate(req.body);
-    if(error){
-        throw new ExpressError(400);
-    }else{
-        next();
+    // Accept either nested (req.body.listing) or top-level fields (req.body)
+    const payload = req.body && req.body.listing ? { listing: req.body.listing } : { listing: req.body };
+    const { error, value } = listingSchema.validate(payload);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(', ');
+        return next(new ExpressError(400, msg));
     }
+    // attach the validated and normalized listing object for use in routes
+    req.validatedListing = value.listing;
+    next();
 }
 
 const validateReview = (req, res, next) => {
-    let { error } = reviewSchema.validate(req.body);
-    if(error){
-        throw new ExpressError(400, error.details.map(el => el.message).join(', '));
-    }else{
-        next();
+  // coerce rating to Number if present (forms send strings)
+  console.log('Before coercion:', req.body.review);
+  if (req.body && req.body.review && typeof req.body.review.rating === 'string') {
+    req.body.review.rating = Number(req.body.review.rating);
+  }
+  console.log('After coercion:', req.body.review);
+  const { error } = reviewSchema.validate({ review: req.body.review });
+  if (error) { 
+    console.log('Review Validation error');
+    const msg = error.details.map(el => el.message).join(', ');
+    return next(new ExpressError(400, msg));
+  }
+  next();
+};
+
+const sessionOptions = {
+    secret: "secretcode123",
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        // expires must be a Date
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7 * 4), // 4 weeks
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 4,
+        httpOnly: true,
     }
-}
+};
 
 app.get('/', (req, res) => { 
     res.send('Home Page');
+});
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    // res.locals.error = req.flash('error');
+    next();
 });
 
 // Add New Listing Form Route
@@ -68,10 +102,10 @@ app.get('/listings/:id', wrapAsync(async (req, res, next) => {
 
 // Create Route
 app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
-//   const newListing = new Listing(req.body.listing);
-  listingSchema.validateAsync(req.body);
-  const newListing = new Listing(req.body.listing);
+  // use the validated listing object
+  const newListing = new Listing(req.validatedListing);
   await newListing.save();
+  req.flash('success', 'Successfully created a new listing!');
   res.redirect("/listings");
 }));
 
@@ -79,7 +113,7 @@ app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
 app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
-  const raw = getNames();                    // e.g. ["Bahamas (the)", "Dominican Republic (the)", ...]
+  const raw = getNames();                    // e.g. ["Bahamas (the)", ...]
   const countries = raw.slice().sort()
   .map(name => name.replace(/\s*\(the\)$/, ''));
   res.render("listings/edit.ejs", { listing, countries });
@@ -88,7 +122,8 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
 //Update Route
 app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
   let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  await Listing.findByIdAndUpdate(id, { ...req.validatedListing });
+  req.flash('success', 'Successfully updated the listing!');
   res.redirect(`/listings/${id}`);
 }));
 
@@ -97,17 +132,20 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
   console.log(deletedListing);
+  req.flash('success', 'Successfully deleted the listing!');
   res.redirect("/listings");
 }));
 
 // Review Post Route
-app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res, next) => {
+    const listing = await Listing.findById(req.params.id);
     if(!listing) return next(new ExpressError(404, 'Listing not found'));
-    let newReview = new Review(req.body.review);
+    const validated = await reviewSchema.validateAsync({ review: req.body.review });
+    const newReview = new Review(validated.review);
     await newReview.save();
     listing.reviews.push(newReview);
     await listing.save();
+    req.flash('success', 'Successfully added your review!');
     res.redirect(`/listings/${listing._id}`);
 })); 
 
@@ -116,6 +154,7 @@ app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
     let { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+    req.flash('success', 'Successfully deleted the review!');
     res.redirect(`/listings/${id}`);
 }));
 

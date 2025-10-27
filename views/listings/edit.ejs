@@ -39,13 +39,12 @@
       <br>
 
       <div class="mb-3 col-md-8">
-        <label for="country" class="required">Country</label>
+        <label for="country" class="">Country</label>
 
-        <select name="country" id="country" class="form-select" required>
-            <option value="" selected><%=listing.country%></option>
-                <% for(let country of countries){ %>
-                    <option value="<%= country %>"><%= country %></option>
-                <% } %>
+        <select name="listing[country]" id="country" class="form-select" required>
+          <% for (let country of countries) { %>
+            <option value="<%= country %>" <%= country === listing.country ? 'selected' : '' %>><%= country %></option>
+          <% } %>
         </select>        
         <div class="invalid-feedback">
           Please provide a country.

@@ -44,7 +44,8 @@
         <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
             <div>
                 <label for="rating">Rating</label>
-                <input type="range" name="review[rating]" id="rating" min="1" max="10" step="1" class="form-range">
+                <input type="range" name="review[rating]" id="rating" min="1" max="10" step="1" class="form-range" value="6" required>
+                <div class="invalid-feedback">Please provide a rating</div>
             </div>
             <div>
                 <label for="comment" class="form-label">Comment</label>
