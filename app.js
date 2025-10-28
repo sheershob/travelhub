@@ -12,6 +12,10 @@ const session = require('express-session');
 // country-list exposes helper functions - use getNames() to get an array
 const { getNames, getCodes } = require('country-list');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+const userRouter = require('./routes/user');
 
 const app = express(); 
 
@@ -70,11 +74,24 @@ app.get('/', (req, res) => {
 app.use(session(sessionOptions));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     // res.locals.error = req.flash('error');
     next();
 });
+
+app.get('/register', (req, res) => {
+    res.render('users/register.ejs');
+});
+
+app.use("/", userRouter);
 
 // Add New Listing Form Route
 app.get('/listings/new', (req, res) => {
