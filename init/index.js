@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Initdata = require('./data');
+const initData = require('./data');
 const Listing = require('../models/listing.js');
 
 main().then( () =>{
@@ -13,7 +13,9 @@ async function main() {
 
 const initDB = async () => {
     await Listing.deleteMany({});
-    await Listing.insertMany(Initdata.data);
+    // map the seed data to include an owner and insert the resulting array
+    const listings = initData.data.map(obj => ({ ...obj, owner: "69021a9c46fec44e2b41c41e" }));
+    await Listing.insertMany(listings);
     console.log("Database Initialized");
 }
 initDB();

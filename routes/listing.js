@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Listing = require('../models/listing');
 const wrapAsync = require('../utils/wrapAsync');
+const ListingSchema = require('../schema');
 const {isLoggedIn} = require('../middleware');
+const { getNames, getCodes } = require('country-list');
 
 // Index Route - show all listings
 router.get("/", wrapAsync( async (req, res) => {
@@ -11,18 +13,29 @@ router.get("/", wrapAsync( async (req, res) => {
 }));
 
 // New Route
-router.get("/new", isLoggedIn, (req, res) => {    
-    res.render("listings/new.ejs");
+router.get("/new", isLoggedIn, (req, res) => { 
+    try {
+        // getNames() returns an array of country names
+        const raw = getNames();                    // e.g. ["Bahamas (the)", "Dominican Republic (the)", ...]
+        const countries = raw.slice().sort()
+        .map(name => name.replace(/\s*\(the\)$/, '')); // removes " (the)"
+        res.render('listings/new.ejs', { countries });
+    }
+    catch (err) { 
+        console.log(err);
+        res.send(err);
+    }   
 });
 
 // Show Route
 router.get("/:id", wrapAsync( async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id).populate("reviews").populate("owner");
     if(!listing){
         req.flash("error", "Listing doesn't exist!");
         return res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show.ejs", { listing });
 }));
 
@@ -38,7 +51,10 @@ router.post("/", isLoggedIn, wrapAsync( async (req, res) => {
 router.get("/:id/edit", isLoggedIn, wrapAsync( async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
-    res.render("listings/edit.ejs", { listing });
+    const raw = getNames();                    // e.g. ["Bahamas (the)", ...]
+    const countries = raw.slice().sort()
+    .map(name => name.replace(/\s*\(the\)$/, ''));
+    res.render("listings/edit.ejs", { listing, countries });
 }));
 
 // Update Route

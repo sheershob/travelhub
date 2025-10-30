@@ -8,6 +8,7 @@
             <div class="card-body">
                 <p class="card-text mt-2 px-4"> 
                      <br>
+                    by <b> <%= listing.owner.username %> </b> <br>
                     <%= listing.description %> <br>
                     <%= listing.location %>, <%= listing.country %> <br>
                     ₹<%= listing.price.toLocaleString("en-IN") %> per night

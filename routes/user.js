@@ -17,11 +17,12 @@ router.post("/signup", wrapAsync( async (req, res) => {
         req.logIn(registeredUser, (err) => {
             if (err) {
                 console.error('Login error:', err);
-                return next(err);
+                req.flash('error', 'Login after signup failed. Please log in.');
+                return res.redirect('/login');
             }
             req.flash("success", "Welcome to Travel Hub!");
             res.redirect("/listings");
-        });        
+        });
     }    
     catch(e){
         req.flash("error", e.message);
@@ -52,8 +53,7 @@ router.post("/login", saveRedirectUrl, (req, res, next) => {
                 return next(err);
             }
             req.flash('success', `Welcome back ${user.username}!`);
-            res.redirect(req.locals.redirectUrl || "/listings");
-            return res.redirect('/listings');
+            return res.redirect(res.locals.redirectUrl || "/listings");
         });
     })(req, res, next);
 });
