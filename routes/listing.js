@@ -42,6 +42,7 @@ router.get("/:id", wrapAsync( async (req, res) => {
 // Create Route
 router.post("/", isLoggedIn, wrapAsync( async (req, res) => {
     const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id;
     await newListing.save();
     req.flash('success', 'New Listing Created!');
     res.redirect("/listings");
@@ -60,6 +61,15 @@ router.get("/:id/edit", isLoggedIn, wrapAsync( async (req, res) => {
 // Update Route
 router.put("/:id", isLoggedIn, wrapAsync( async (req, res) => {
     let { id } = req.params;
+    let currentListing = await Listing.findById(id);
+    if(!currentListing){
+        req.flash('error', 'Listing not found');
+        return res.redirect('/listings');
+    }
+    if(currentListing.owner.toString() !== req.user._id.toString()){
+        req.flash('error', 'You do not have permission to edit this listing!');
+        return res.redirect(`/listings/${id}`);
+    }
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     req.flash('success', 'Listing Updated!');
     res.redirect(`/listings/${id}`);
@@ -68,6 +78,15 @@ router.put("/:id", isLoggedIn, wrapAsync( async (req, res) => {
 // Delete Route
 router.delete("/:id", isLoggedIn, wrapAsync( async (req, res) => {
     let { id } = req.params;
+    let currentListing = await Listing.findById(id);
+    if(!currentListing){
+        req.flash('error', 'Listing not found');
+        return res.redirect('/listings');
+    }
+    if(currentListing.owner.toString() !== req.user._id.toString()){
+        req.flash('error', 'You do not have permission to delete this listing!');
+        return res.redirect(`/listings/${id}`);
+    }
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
     req.flash('success', 'Listing Deleted!');

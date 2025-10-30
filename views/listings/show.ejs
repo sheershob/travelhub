@@ -16,10 +16,13 @@
             </div>
     </div>
     <div >
-    <a href="<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
-    <form action="/listings/<%= listing.id %>/?_method=DELETE" method="POST">
-        <button class="btn btn-danger mt-3 mb-5">Delete </button>
-    </form>
+        <% if(listing.owner._id.equals(currentUser?._id)) { %>
+            <a href="<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
+            <form action="/listings/<%= listing.id %>/?_method=DELETE" method="POST">
+                <button class="btn btn-danger mt-3 mb-5">Delete </button>
+            </form>
+        <% } %>
+    </div>
 
     <div class="col-12 mt-3 mb-3">
         <hr>
