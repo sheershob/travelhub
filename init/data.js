@@ -104,7 +104,7 @@ const sampleListings = [
       "Have an entire island to yourself for a truly exclusive and unforgettable vacation experience.",
     image: "https://images.unsplash.com/photo-1618140052121-39fc6db33972?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9kZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     price: 10000,
-    location: "Fiji",
+    location: "Suva",
     country: "Fiji",
   },
   {
@@ -203,7 +203,7 @@ const sampleListings = [
       "Stay in an eco-friendly treehouse nestled in the forest. It's the perfect escape for nature lovers.",
     image: "https://images.unsplash.com/photo-1488462237308-ecaa28b729d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c2t5JTIwdmFjYXRpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     price: 750,
-    location: "Costa Rica",
+    location: "San José",
     country: "Costa Rica",
   },
   {
@@ -239,7 +239,7 @@ const sampleListings = [
       "Indulge in luxury in this overwater villa in the Maldives with stunning views of the Indian Ocean.",
     image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGFrZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
     price: 6000,
-    location: "Maldives",
+    location: "Malé",
     country: "Maldives",
   },
   {
@@ -257,7 +257,7 @@ const sampleListings = [
       "Escape to a secluded beach house on the Pacific coast of Costa Rica. Surf, relax, and unwind.",
     image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2glMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
     price: 1800,
-    location: "Costa Rica",
+    location: "Arenal",
     country: "Costa Rica",
   },
 ];
