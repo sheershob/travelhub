@@ -9,7 +9,6 @@ const ExpressError = require('./utils/ExpressError');
 const { listingSchema, reviewSchema } = require('./schema');
 const Review = require('./models/review');
 const session = require('express-session');
-// country-list exposes helper functions - use getNames() to get an array
 const { getNames, getCodes } = require('country-list');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -83,7 +82,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
-    // res.locals.error = req.flash('error');
+    res.locals.error = req.flash('error');
+    res.locals.currentUser = req.user;
     next();
 });
 
