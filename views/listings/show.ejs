@@ -37,12 +37,15 @@
                 <div class="card mb-3 col-5 me-3 ms-3">
                     <div class="card-body">
                         <!-- <h5 class="card-title"> <%= review.author.username %></h5> -->
-                        <h5 class="card-title mt-2"> <%= review.author.username %> <%= review.rating %> <i class="fa-solid fa-star" style="color: #FFD43B;"></i></h5>
+                        <h5 class="card-title mt-2 mb-0"> <%= review.author.username %> <%= review.rating %> <i class="fa-solid fa-star" style="color: #FFD43B;"></i></h5>
+                        <div class="card-text mt-0 mb-1"> <i><%= review.createdAt.toLocaleString('en-US',{ month: 'short', year: 'numeric' }) %> </i> </div>
                         <p class="card-text mb-1"><%= review.comment %></p>
                     </div>
+            <% if(currentUser && review.author._id.equals(currentUser._id)) { %>
                 <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="">
                     <button class="mb-2 btn btn-sm btn-dark">Delete</button>
                 </form>
+            <% } %>
                 </div>
             <% } %>
     </div>
