@@ -6,7 +6,7 @@ const ExpressError = require('../utils/ExpressError');
 const { reviewSchema } = require('../schema');
 const Review = require('../models/review');
 const Listing = require('../models/listing');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, isReviewAuthor } = require('../middleware');
 
 const validateReview = (req, res, next) => {
   // coerce rating to Number if present (forms send strings)
@@ -37,7 +37,7 @@ router.post("/", isLoggedIn, validateReview, wrapAsync(async (req, res, next) =>
 }));
 
 // Review Delete Route
-router.delete("/:reviewId", isLoggedIn, wrapAsync(async (req, res) => {
+router.delete("/:reviewId", isLoggedIn, isReviewAuthor, wrapAsync(async (req, res) => {
     let { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
