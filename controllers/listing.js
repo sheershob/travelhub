@@ -1,4 +1,5 @@
 const Listing = require('../models/listing');
+const { getNames, getCodes } = require('country-list');
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});

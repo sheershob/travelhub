@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+console.log(process.env);
+
 const express = require('express');
 const mongoose = require('mongoose');
 const Listing = require('./models/listing');
@@ -81,87 +86,6 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-// Add New Listing Form Route
-// app.get('/listings/new', (req, res) => {
-//     try {
-//         // getNames() returns an array of country names
-//         const raw = getNames();                    // e.g. ["Bahamas (the)", "Dominican Republic (the)", ...]
-//         const countries = raw.slice().sort()
-//         .map(name => name.replace(/\s*\(the\)$/, '')); // removes " (the)"
-//         res.render('listings/new.ejs', { countries });
-//     }
-//     catch (err) { 
-//         console.log(err);
-//         res.send(err);
-//     }
-// });
-
-// // Show Route
-// app.get('/listings/:id', wrapAsync(async (req, res, next) => {
-//     let { id } = req.params;
-//     // populate reviews so the template can access review fields
-//     const listing = await Listing.findById(id).populate('reviews');
-//     if(!listing) return next(new ExpressError(404, 'Listing not found'));
-//     res.render("listings/show.ejs", { listing });
-// }));
-
-// // Create Route
-// app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
-//   // use the validated listing object
-//   const newListing = new Listing(req.validatedListing);
-//   await newListing.save();
-//   req.flash('success', 'Successfully created a new listing!');
-//   res.redirect("/listings");
-// }));
-
-// //Edit Route
-// app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
-//   let { id } = req.params;
-//   const listing = await Listing.findById(id);
-//   const raw = getNames();                    // e.g. ["Bahamas (the)", ...]
-//   const countries = raw.slice().sort()
-//   .map(name => name.replace(/\s*\(the\)$/, ''));
-//   res.render("listings/edit.ejs", { listing, countries });
-// }));
-
-// //Update Route
-// app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
-//   let { id } = req.params;
-//   await Listing.findByIdAndUpdate(id, { ...req.validatedListing });
-//   req.flash('success', 'Successfully updated the listing!');
-//   res.redirect(`/listings/${id}`);
-// }));
-
-// //Delete Route
-// app.delete("/listings/:id", wrapAsync(async (req, res) => {
-//   let { id } = req.params;
-//   let deletedListing = await Listing.findByIdAndDelete(id);
-//   console.log(deletedListing);
-//   req.flash('success', 'Successfully deleted the listing!');
-//   res.redirect("/listings");
-// }));
-
-// // Review Post Route
-// app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res, next) => {
-//     const listing = await Listing.findById(req.params.id);
-//     if(!listing) return next(new ExpressError(404, 'Listing not found'));
-//     const validated = await reviewSchema.validateAsync({ review: req.body.review });
-//     const newReview = new Review(validated.review);
-//     await newReview.save();
-//     listing.reviews.push(newReview);
-//     await listing.save();
-//     req.flash('success', 'Successfully added your review!');
-//     res.redirect(`/listings/${listing._id}`);
-// })); 
-
-// // Review Delete Route
-// app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
-//     let { id, reviewId } = req.params;
-//     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-//     await Review.findByIdAndDelete(reviewId);
-//     req.flash('success', 'Successfully deleted the review!');
-//     res.redirect(`/listings/${id}`);
-// }));
 
 // Connect to MongoDB and start the server. Use sensible timeouts so failures are
 // surfaced quickly instead of silently buffering operations.

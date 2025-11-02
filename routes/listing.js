@@ -5,6 +5,9 @@ const wrapAsync = require('../utils/wrapAsync');
 const ListingSchema = require('../schema');
 const {isLoggedIn} = require('../middleware');
 const { getNames, getCodes } = require('country-list');
+const multer = require('multer');
+const {storage} = require('../cloudConfig.js');
+const upload = multer({ storage });
 
 const listingController = require('../controllers/listing');
 
@@ -18,7 +21,8 @@ router.get("/new", isLoggedIn, listingController.new );
 router.get("/:id", wrapAsync( listingController.showListing));
 
 // Create Route
-router.post("/", isLoggedIn, wrapAsync( listingController.createListing ));
+router.post("/", isLoggedIn, upload.single('listing[image]'), wrapAsync( listingController.createListing ));
+// router.post("/", (req, res) => {res.send(req.file)})
 
 //Edit Route
 router.get("/:id/edit", isLoggedIn, wrapAsync( listingController.edit));
