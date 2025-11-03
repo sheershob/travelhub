@@ -153,7 +153,7 @@ const sampleListings = [
     },
       price: 1200,
     location: "Cotswolds",
-    country: "United Kingdom",
+    country: "United Kingdom of Great Britain and Northern Ireland",
   },
   {
     title: "Historic Brownstone in Boston",
@@ -225,7 +225,7 @@ const sampleListings = [
     },
       price: 4000,
     location: "Scottish Highlands",
-    country: "United Kingdom",
+    country: "United Kingdom of Great Britain and Northern Ireland",
   },
   {
     title: "Desert Oasis in Dubai",

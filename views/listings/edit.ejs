@@ -3,15 +3,14 @@
     <div class="col-8 offset-2">     
 
     <h3>Edit your listing</h3>
-    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
+    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" enctype="multipart/form-data" novalidate class="needs-validation">
       <div class="mb-3">
         <label for="title" class="required">Title</label>
         <input name="listing[title]" class="form-control" value="<%= listing.title %>" type="text" required/>
         <div class="invalid-feedback">
           Please provide a title.
         </div>
-      </div>      
-      <br>
+      </div>   
 
       <div class="mb-3">
         <label for="description" class="required">Description</label>
@@ -19,14 +18,18 @@
         <div class="invalid-feedback">
           Please provide a description.
         </div>
-      </div>      
-      <br> 
+      </div>   
 
       <div class="mb-3">
-        <label for="">Image URL</label>
-        <input name="listing[image]" class="form-control" value="<%= listing.image %>" type="text" placeholder="Image URL" />
+        <label for="" class="required">Image Upload</label>
+        <input name="image" id="image" class="form-control" type="file"
+        accept="image/png, image/jpeg, image/jpg, image/webp"
+        />
+        <div class="invalid-feedback">
+            Please provide a listing image.
+        </div>            
+        <small id="fileError" class="text-danger"></small>
       </div>
-      <br>
 
       <div class="row">      
       <div class="mb-3 col-md-4" >
@@ -35,8 +38,7 @@
         <div class="invalid-feedback">
           Please provide a price.
         </div>
-      </div>      
-      <br>
+      </div>     
 
       <div class="mb-3 col-md-8">
         <label for="country" class="">Country</label>
@@ -51,7 +53,6 @@
         </div>
       </div> 
       </div>     
-      <br>
 
       <div class="mb-3 col-md-8">
         <label for="location" class="required">Location</label>
@@ -63,8 +64,7 @@
         <div class="invalid-feedback">
           Please provide a location.
         </div>
-      </div>      
-      <br>
+      </div>     
 
         <button class="btn btn-dark" type="submit">Update Listing</button>
         <br><br>

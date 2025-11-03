@@ -25,7 +25,12 @@
         <div>
             <label for="image" class="required">Upload Listing Image:</label>
             <input type="file" id="image" class="form-control" required
-            name="image" accept="image/png, image/jpeg, image/jpg, image/webp"><br>
+            name="image" accept="image/png, image/jpeg, image/jpg, image/webp">
+            <div class="invalid-feedback">
+                Please provide a listing image.
+            </div>            
+            <small id="fileError" class="text-danger"></small>
+            <br>
         </div>
 
         <div class="col-10">

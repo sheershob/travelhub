@@ -42,10 +42,7 @@ module.exports.createListing = async (req, res, next) => {
     if (req.file) {
         console.log('New Listing', req);
         newListing.image = { url: req.file.path, filename: req.file.filename };
-    } else if (payload.image && typeof payload.image === 'string') {
-        // Accept a user-entered image URL from the form
-        newListing.image = { url: payload.image, filename: '' };
-    }
+    } 
     await newListing.save();
     req.flash('success', 'New Listing Created!');
     res.redirect("/listings");
@@ -71,7 +68,13 @@ module.exports.updateListing = async (req, res) => {
         req.flash('error', 'You do not have permission to edit this listing!');
         return res.redirect(`/listings/${id}`);
     }
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    // Accept either nested `listing` payload or top-level fields
+    const payload = req.body && req.body.listing ? req.body.listing : req.body;
+    // If a new file was uploaded, update the image object from multer/Cloudinary
+    if (req.file) {
+        payload.image = { url: req.file.path, filename: req.file.filename };
+    }
+    await Listing.findByIdAndUpdate(id, { ...payload });
     req.flash('success', 'Listing Updated!');
     res.redirect(`/listings/${id}`);
 }

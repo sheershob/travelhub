@@ -33,7 +33,7 @@ router.post("/", isLoggedIn, upload.single('image'), wrapAsync( listingControlle
 router.get("/:id/edit", isLoggedIn, wrapAsync( listingController.edit));
 
 // Update Route
-router.put("/:id", isLoggedIn, wrapAsync( listingController.updateListing ));
+router.put("/:id", isLoggedIn, upload.single('image'), wrapAsync( listingController.updateListing ));
 
 // Delete Route
 router.delete("/:id", isLoggedIn, wrapAsync( listingController.deleteListing));
