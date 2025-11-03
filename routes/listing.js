@@ -21,8 +21,13 @@ router.get("/new", isLoggedIn, listingController.new );
 router.get("/:id", wrapAsync( listingController.showListing));
 
 // Create Route
-router.post("/", isLoggedIn, upload.single('listing[image]'), wrapAsync( listingController.createListing ));
-// router.post("/", (req, res) => {res.send(req.file)})
+router.post("/", isLoggedIn, upload.single('image'), wrapAsync( listingController.createListing ));
+
+// router.post("/", isLoggedIn, upload.single('image'), (req, res) => {
+//   console.log('body:', req.body);
+//   console.log('file:', req.file);
+//   res.send('ok');
+// });
 
 //Edit Route
 router.get("/:id/edit", isLoggedIn, wrapAsync( listingController.edit));

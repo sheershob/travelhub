@@ -33,9 +33,19 @@ module.exports.showListing = async (req, res) => {
     res.render("listings/show.ejs", { listing });
 }
 
-module.exports.createListing = async (req, res) => {
-    const newListing = new Listing(req.body.listing);
+module.exports.createListing = async (req, res, next) => {
+    // Accept either nested `listing` payload (req.body.listing) or top-level fields (req.body)
+    const payload = req.body && req.body.listing ? req.body.listing : req.body;
+    const newListing = new Listing(payload);
     newListing.owner = req.user._id;
+    // If a file was uploaded by multer (Cloudinary), attach the url/filename
+    if (req.file) {
+        console.log('New Listing', req);
+        newListing.image = { url: req.file.path, filename: req.file.filename };
+    } else if (payload.image && typeof payload.image === 'string') {
+        // Accept a user-entered image URL from the form
+        newListing.image = { url: payload.image, filename: '' };
+    }
     await newListing.save();
     req.flash('success', 'New Listing Created!');
     res.redirect("/listings");
