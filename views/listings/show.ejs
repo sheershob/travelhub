@@ -1,4 +1,17 @@
 <% layout('layouts/boilerplate') -%>
+
+<script>
+    let coordinates = <%- JSON.stringify(
+    listing.geography 
+    && listing.geography.coordinates // Check if the array exists
+    && typeof listing.geography.coordinates[0] === 'number' // Check if the Lat is a number
+    ? listing.geography.coordinates 
+    : [-0.09, 51.505]
+) %>;
+    let temp = coordinates ? [coordinates[1], coordinates[0]] : null; // Convert [lon, lat] to [lat, lon]
+    coordinates = temp;
+</script>
+
 <div class="row mt-3">
     <div class="col-8 offset-2 mt-3">
 

@@ -40,7 +40,18 @@ const ListingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    geography: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
     }
+  }
 });
 
 const Listing = mongoose.model('Listing', ListingSchema);

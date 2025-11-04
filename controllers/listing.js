@@ -1,5 +1,7 @@
 const Listing = require('../models/listing');
 const { getNames, getCodes } = require('country-list');
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
@@ -38,6 +40,35 @@ module.exports.createListing = async (req, res, next) => {
     const payload = req.body && req.body.listing ? req.body.listing : req.body;
     const newListing = new Listing(payload);
     newListing.owner = req.user._id;
+    const location = newListing.location; // from your form input
+
+  // 1️⃣ Try exact location
+  let url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`;
+  let response = await fetch(url);
+  let data = await response.json();
+
+  let coords;
+
+  if (data.length > 0) {
+    coords = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+  } else {
+    // 2️⃣ Fallback: use country
+    let countryUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(newListing.country)}&format=json&limit=1`;
+    let countryResponse = await fetch(countryUrl);
+    let countryData = await countryResponse.json();
+    if (countryData.length > 0) {
+      coords = { lat: parseFloat(countryData[0].lat), lon: parseFloat(countryData[0].lon) };
+    } else {
+      coords = null; // completely invalid input
+    }
+  }
+    // console.log('Coordinates:', coords);
+      if (coords) {
+    newListing.geography = {
+      type: "Point",
+      coordinates: [coords.lon, coords.lat] // ✅ GeoJSON format
+    };
+  }
     // If a file was uploaded by multer (Cloudinary), attach the url/filename
     if (req.file) {
         console.log('New Listing', req);
