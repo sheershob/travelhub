@@ -19,6 +19,7 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "joi": "^18.0.1",
+    "leaflet": "^1.9.4",
     "method-override": "^3.0.0",
     "mongoose": "^8.18.3",
     "multer": "^2.0.2",

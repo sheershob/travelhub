@@ -1,7 +1,7 @@
 if(process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
-console.log(process.env);
+// console.log(process.env);
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,12 +9,10 @@ const Listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const wrapAsync = require('./utils/wrapAsync');
 const ExpressError = require('./utils/ExpressError');
 const { listingSchema, reviewSchema } = require('./schema');
 const Review = require('./models/review');
 const session = require('express-session');
-const { getNames, getCodes } = require('country-list');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
