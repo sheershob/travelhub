@@ -5,13 +5,11 @@ if(process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const mongoose = require('mongoose');
-const Listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError');
 const { listingSchema, reviewSchema } = require('./schema');
-const Review = require('./models/review');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -55,9 +53,9 @@ const sessionOptions = {
     }
 };
 
-app.get('/', (req, res) => { 
-    res.send('Home Page');
-});
+// app.get('/', (req, res) => { 
+//     res.send('Home Page');
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());

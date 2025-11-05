@@ -105,6 +105,37 @@ module.exports.updateListing = async (req, res) => {
     if (req.file) {
         payload.image = { url: req.file.path, filename: req.file.filename };
     }
+    // --- Geocode updated location/country (same approach as createListing) ---
+    // Prefer the newly submitted location, fall back to existing listing values
+    const locationToSearch = payload.location || currentListing.location;
+    let coords = null;
+    if (locationToSearch) {
+        try {
+            let url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationToSearch)}&format=json&limit=1`;
+            let response = await fetch(url);
+            let data = await response.json();
+            if (data && data.length > 0) {
+                coords = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+            } else {
+                // fallback to country
+                const countryToSearch = payload.country || currentListing.country;
+                if (countryToSearch) {
+                    let countryUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(countryToSearch)}&format=json&limit=1`;
+                    let countryResponse = await fetch(countryUrl);
+                    let countryData = await countryResponse.json();
+                    if (countryData && countryData.length > 0) {
+                        coords = { lat: parseFloat(countryData[0].lat), lon: parseFloat(countryData[0].lon) };
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Geocoding failed during update:', e.message || e);
+            coords = null;
+        }
+    }
+    if (coords) {
+        payload.geography = { type: 'Point', coordinates: [coords.lon, coords.lat] };
+    }
     await Listing.findByIdAndUpdate(id, { ...payload });
     req.flash('success', 'Listing Updated!');
     res.redirect(`/listings/${id}`);
