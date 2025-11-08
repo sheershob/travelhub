@@ -36,6 +36,11 @@ const ListingSchema = new Schema({
         ref: 'Review',
       }
     ],
+    ratings: {
+      sum: { type: Number, default: 0 },
+      count: { type: Number, default: 0 },
+      average: { type: Number, default: null }
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',

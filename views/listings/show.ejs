@@ -15,7 +15,17 @@
 <div class="row mt-3">
     <div class="col-8 offset-2 mt-3">
 
-    <h3> <b><%= listing.title %></b> </h3>
+        <h3>
+            <b><%= listing.title %></b>
+                    <% if (listing.ratings && listing.ratings.count > 0) { %>
+                        <small class="text-warning ms-2">
+                            <i class="fa-solid fa-star"></i>
+                            <%= (typeof listing.ratings.average === 'number') ? listing.ratings.average.toFixed(2) : (listing.ratings.average) %>
+                        </small>
+                    <% } else { %>
+                        <small class="text-muted ms-2"><i class="fa-solid fa-star"></i></small>
+                    <% } %>
+        </h3>
     <div class="card listing-card mb-3">
         <img src="<%= listing.image.url %>" class="card-img-top show-img border-2" alt="Listing Image">
             <div class="card-body">

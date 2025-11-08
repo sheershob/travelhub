@@ -19,10 +19,16 @@
                  style="height: 20rem;">
                 <div class="card-img-overlay">`</div>
                 <div class="card-body">
-                    <p class="card-text">
-                    <b><%= listing.title %></b> <br> 
-                    ₹<%= listing.price.toLocaleString("en-IN") %> per night
-                    </p>
+                                        <p class="card-text">
+                                        <b><%= listing.title %></b>
+                                                            <% if (listing.ratings && listing.ratings.count > 0) { %>
+                                                                <span class="text-warning ms-2"><i class="fa-solid fa-star"></i> <%= (typeof listing.ratings.average === 'number') ? listing.ratings.average.toFixed(2) : listing.ratings.average %></span>
+                                                            <% } else { %>
+                                                                <span class="text-muted ms-2"><i class="fa-solid fa-star"></i></span>
+                                                            <% } %>
+                                        <br>
+                                        ₹<%= listing.price.toLocaleString("en-IN") %> per night
+                                        </p>
                 </div>
             </div>
         </a>
