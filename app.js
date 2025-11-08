@@ -11,6 +11,7 @@ const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError');
 const { listingSchema, reviewSchema } = require('./schema');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -18,6 +19,8 @@ const User = require('./models/user');
 const listingRouter = require('./routes/listing');
 const reviewRouter = require('./routes/review');
 const userRouter = require('./routes/user');
+
+const DBurl = process.env.ATLASDB_URL;
 
 const app = express(); 
 
@@ -41,7 +44,16 @@ const validateListing = (req, res, next) => {
     next();
 }
 
+const store = MongoStore.create({
+    mongoUrl: DBurl,
+    crypto:{
+        secret: 'squirrel123'
+    },
+    touchAfter: 24 * 3600 // time period in seconds
+});
+
 const sessionOptions = {
+    store,
     secret: "secretcode123",
     resave: false,
     saveUninitialized: true,
@@ -56,6 +68,12 @@ const sessionOptions = {
 // app.get('/', (req, res) => { 
 //     res.send('Home Page');
 // });
+
+
+
+store.on("error", function(e){
+    console.log("SESSION STORE ERROR", e)
+})
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -86,7 +104,8 @@ app.use("/", userRouter);
 // Connect to MongoDB and start the server. Use sensible timeouts so failures are
 // surfaced quickly instead of silently buffering operations.
 async function startServer() {
-    const uri = 'mongodb://127.0.0.1:27017/travelhub';
+    // const uri = 'mongodb://127.0.0.1:27017/travelhub';  // Local MongoDB
+    const uri = process.env.ATLASDB_URL;        // Cloud Atlas MongoDB
     try {
         await mongoose.connect(uri, {
             // modern connection options
