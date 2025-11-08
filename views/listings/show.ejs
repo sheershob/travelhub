@@ -30,7 +30,7 @@
     </div>
     <div >
         <% if(listing.owner._id.equals(currentUser?._id)) { %>
-            <a href="<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
+            <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
             <form action="/listings/<%= listing.id %>/?_method=DELETE" method="POST">
                 <button class="btn btn-danger mt-3 mb-5">Delete </button>
             </form>

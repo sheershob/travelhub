@@ -105,6 +105,9 @@ module.exports.updateListing = async (req, res) => {
     if (req.file) {
         payload.image = { url: req.file.path, filename: req.file.filename };
     }
+    else{
+        payload.image = currentListing.image;
+    }
     // --- Geocode updated location/country (same approach as createListing) ---
     // Prefer the newly submitted location, fall back to existing listing values
     const locationToSearch = payload.location || currentListing.location;
