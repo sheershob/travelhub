@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Listing = require('../models/listing');
 const wrapAsync = require('../utils/wrapAsync');
-const ListingSchema = require('../schema');
 const {isLoggedIn} = require('../middleware');
-const { getNames, getCodes } = require('country-list');
 const multer = require('multer');
 const {storage} = require('../cloudConfig.js');
 const upload = multer({ storage });

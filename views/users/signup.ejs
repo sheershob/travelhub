@@ -3,6 +3,13 @@
 <div class="row">
     <div class="col-6 offset-3">
         <h2 class="mt-4 mb-4">Sign Up</h2>
+            <form action="/auth/google" method="GET">
+        <a href="/auth/google" class="btn btn-light border mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm w-100">
+            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google Logo" width="25" height="25">
+            <span>Sign Up with Google</span>
+        </a>
+        </form>
+        <h4>OR</h4>
         <form action="/signup" method="POST" class="needs-validation" novalidate>
             <div class="mb-3">
                 <label for="username">Username</label>

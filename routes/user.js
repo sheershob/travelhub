@@ -43,4 +43,38 @@ router.post("/login", saveRedirectUrl, (req, res, next) => {
 
 router.get("/logout", userController.logout);
 
+// Google OAuth Routes
+router.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+router.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    if (!req.user.isUsernameSet) {
+      return res.redirect('/choose-username');
+    }
+    res.redirect('/listings');
+  }
+);
+
+router.get('/choose-username', (req, res) => {
+  if (!req.isAuthenticated()) return res.redirect('/login');
+  if (req.user.isUsernameSet) return res.redirect('/listings');
+  res.render('users/chooseUsername'); // make this view
+});
+
+router.post('/choose-username', async (req, res) => {
+  const { username } = req.body;
+  const existing = await User.findOne({ username });
+  if (existing) {
+    req.flash('error', 'Username already taken!');
+    return res.redirect('/choose-username');
+  }
+
+  await User.findByIdAndUpdate(req.user._id, { username, isUsernameSet: true });
+  req.flash('success', 'Username set successfully!');
+  res.redirect('/listings');
+});
+
 module.exports = router;

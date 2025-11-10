@@ -6,6 +6,10 @@ module.exports.isLoggedIn = (req, res, next) => {
         req.flash('error', 'You must be signed in to create a new listing!');
         return res.redirect("/login");
     }
+    if (req.user && req.user.googleId && !req.user.isUsernameSet) {
+        // console.log(req.user);
+        return res.redirect("/create-username");
+    }
     next();
 }
 

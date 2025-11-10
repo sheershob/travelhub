@@ -8,9 +8,20 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true // allows multiple docs with null googleId
+    },
+    isUsernameSet: {
+        type: Boolean,
+        default: true // local signups already set username
+    }
 });
 
-UserSchema.plugin(passportLocalMongoose); // adds username, hash and salt fields
+UserSchema.plugin(passportLocalMongoose,{
+    usernameField: 'username'
+}); // adds username, hash and salt fields
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User; 

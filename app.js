@@ -15,6 +15,7 @@ const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/user');
 const listingRouter = require('./routes/listing');
 const reviewRouter = require('./routes/review');
@@ -79,6 +80,44 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+
+// Google strategy (add this new block)
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Try finding an existing Google user
+        let user = await User.findOne({ googleId: profile.id });
+        if (user) return done(null, user);
+
+        // If user exists by email, link Google account
+        user = await User.findOne({ email: profile.emails[0].value });
+        if (user) {
+          user.googleId = profile.id;
+          await user.save();
+          return done(null, user);
+        }
+
+        // Otherwise create a new Google user (username to be chosen later)
+        const newUser = new User({
+          username: profile.displayName.replace(/\s+/g, "").toLowerCase(),
+          email: profile.emails[0].value,
+          googleId: profile.id,
+          isUsernameSet: false,
+        });
+        await newUser.save();
+        done(null, newUser);
+      } catch (err) {
+        done(err, null);
+      }
+    }
+  )
+);
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
