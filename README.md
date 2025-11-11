@@ -5,8 +5,8 @@ TravelHub is a small listings-and-reviews application built with Node.js, Expres
 ## User-facing features
 
 - Browse listings
-  - View all listings on an index page with thumbnail, location and price.
-  - Click into a listing's detail page to see full description, images, reviews and location.
+  - View all listings on an index page with thumbnail, location, rating and price.
+  - Click into a listing's detail page to see full description, images, ratings, reviews and location.
 
 - Create and manage listings (authenticated users)
   - Registered users can create new listings with title, description, location, country, price and an uploaded image.
@@ -21,6 +21,7 @@ TravelHub is a small listings-and-reviews application built with Node.js, Expres
 
 - Auth & sessions
   - Local username/password registration and login via passport-local + passport-local-mongoose.
+  - Implemented Google registration and login also via passport.
   - Session-backed flash messages for user feedback (success/error).
 
 ## Technical overview

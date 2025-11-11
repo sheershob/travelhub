@@ -17,7 +17,7 @@ router.get("/login", (req, res) => {
     res.render("users/login.ejs");
 });
 
-// Use a custom callback so we can log auth errors and control flow
+// Use a custom callback so we can log auth errors and control flow.
 router.post("/login", saveRedirectUrl, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -64,17 +64,41 @@ router.get('/choose-username', (req, res) => {
   res.render('users/chooseUsername'); // make this view
 });
 
-router.post('/choose-username', async (req, res) => {
-  const { username } = req.body;
-  const existing = await User.findOne({ username });
-  if (existing) {
-    req.flash('error', 'Username already taken!');
+router.post('/choose-username', async (req, res, next) => {
+  try {
+    const { username } = req.body;
+
+    // Check if username already exists
+    const existing = await User.findOne({ username });
+    if (existing) {
+      req.flash('error', 'Username already taken!');
+      return res.redirect('/choose-username');
+    }
+
+    // Update the Google user’s record
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { username, isUsernameSet: true },
+      { new: true }
+    );
+
+    // Log the user in immediately after setting username
+    req.logIn(updatedUser, (err) => {
+      if (err) {
+        console.error('Login error:', err);
+        req.flash('error', 'Login after signup failed. Please log in.');
+        return res.redirect('/login');
+      }
+
+      req.flash('success', 'Welcome to Travel Hub!');
+      return res.redirect('/listings');
+    });
+
+  } catch (err) {
+    console.error('Error in choose-username route:', err);
+    req.flash('error', 'Something went wrong. Please try again.');
     return res.redirect('/choose-username');
   }
-
-  await User.findByIdAndUpdate(req.user._id, { username, isUsernameSet: true });
-  req.flash('success', 'Username set successfully!');
-  res.redirect('/listings');
 });
 
 module.exports = router;
