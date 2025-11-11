@@ -17,7 +17,11 @@
 </head>
 
 <body>
-    <%- include('../includes/navbar') %>
+        <%- include('../includes/navbar') %>
+        <script>
+            // expose currentUser safely to client-side scripts
+            window.currentUser = <%- JSON.stringify(typeof currentUser !== 'undefined' ? currentUser : null) %>;
+        </script>
         <div class="container">
             <%- include('../includes/flash') %>
             <%- body %>

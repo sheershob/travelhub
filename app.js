@@ -98,8 +98,12 @@ passport.use(
         // If user exists by email, link Google account
         user = await User.findOne({ email: profile.emails[0].value });
         if (user) {
-          user.googleId = profile.id;
-          await user.save();
+                    user.googleId = profile.id;
+                    // If the user doesn't have a profile photo saved, store the Google profile photo
+                    if ((!user.profilePhoto || user.profilePhoto === '') && profile.photos && profile.photos.length > 0) {
+                        user.profilePhoto = profile.photos[0].value;
+                    }
+                    await user.save();
           return done(null, user);
         }
 
@@ -108,6 +112,7 @@ passport.use(
           username: profile.displayName.replace(/\s+/g, "").toLowerCase(),
           email: profile.emails[0].value,
           googleId: profile.id,
+          profilePhoto: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
           isUsernameSet: false,
         });
         await newUser.save();
@@ -136,6 +141,11 @@ app.get('/register', (req, res) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+
+// Static/simple pages
+app.get('/about', (req, res) => res.render('about'));
+app.get('/privacy', (req, res) => res.render('privacy'));
+app.get('/support', (req, res) => res.render('support'));
 
 
 // Connect to MongoDB and start the server. Use sensible timeouts so failures are

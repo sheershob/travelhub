@@ -16,6 +16,10 @@ const UserSchema = new Schema({
     isUsernameSet: {
         type: Boolean,
         default: true // local signups already set username
+    },
+    profilePhoto: {
+        type: String,
+        default: null
     }
 });
 
