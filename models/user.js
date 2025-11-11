@@ -20,7 +20,11 @@ const UserSchema = new Schema({
     profilePhoto: {
         type: String,
         default: null
-    }
+    },
+        createdAt: {
+        type: Date,
+        default: Date.now()
+    },
 });
 
 UserSchema.plugin(passportLocalMongoose,{

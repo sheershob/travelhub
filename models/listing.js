@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');   
 const review = require('./review');
-const { required } = require('joi');
 const Schema = mongoose.Schema;
 
 const ListingSchema = new Schema({
@@ -47,16 +46,20 @@ const ListingSchema = new Schema({
         required: true
     },
     geography: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true
+      },
+      coordinates: {
+        type: [Number],
+        required: true
+      }
     },
-    coordinates: {
-      type: [Number],
-      required: true
-    }
-  }
+        createdAt: {
+        type: Date,
+        default: Date.now()
+    },
 });
 
 const Listing = mongoose.model('Listing', ListingSchema);

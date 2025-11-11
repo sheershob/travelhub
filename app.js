@@ -91,6 +91,9 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        let photo = profile.photos && profile.photos.length
+        ? profile.photos[0].value.replace('=s96-c', '=s256-c') // Higher res
+        : null;
         // Try finding an existing Google user
         let user = await User.findOne({ googleId: profile.id });
         if (user) return done(null, user);
@@ -101,7 +104,7 @@ passport.use(
                     user.googleId = profile.id;
                     // If the user doesn't have a profile photo saved, store the Google profile photo
                     if ((!user.profilePhoto || user.profilePhoto === '') && profile.photos && profile.photos.length > 0) {
-                        user.profilePhoto = profile.photos[0].value;
+                        user.profilePhoto = photo;
                     }
                     await user.save();
           return done(null, user);
@@ -112,7 +115,8 @@ passport.use(
           username: profile.displayName.replace(/\s+/g, "").toLowerCase(),
           email: profile.emails[0].value,
           googleId: profile.id,
-          profilePhoto: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
+        //   profilePhoto: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
+            profilePhoto: photo,
           isUsernameSet: false,
         });
         await newUser.save();

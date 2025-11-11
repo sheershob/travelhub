@@ -14,8 +14,8 @@
           <a class="nav-link active" aria-current="page" href="/signup">Sign Up</a>
           <a class="nav-link" href="/login">Login</a>
         <% } else { %>
-          <a class="nav-link d-flex align-items-center" href="/profile">
-            <img src="<%= currentUser.profilePhoto && currentUser.profilePhoto !== '' ? currentUser.profilePhoto : '/images/defaultUserPhoto.png' %>" alt="Profile" class="rounded-circle" style="width:36px;height:36px;object-fit:cover;">
+          <a class="nav-link d-flex align-items-center">
+            <img src="<%= '/images/defaultUserPhoto.png' %>" alt="Profile" class="rounded-circle" style="width:36px;height:36px;object-fit:cover;">
           </a>
           <a class="nav-link" href="/logout">Log Out</a>
         <% } %>
