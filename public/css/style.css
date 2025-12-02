@@ -11,6 +11,13 @@ body{
     height: 5rem;
 }
 
+.flatpickr-calendar {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
 /* Navbar*/
 .fa-location-dot{
     color: #f13f3f;
