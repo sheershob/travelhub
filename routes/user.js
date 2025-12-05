@@ -103,4 +103,18 @@ router.post('/choose-username', async (req, res, next) => {
 
 router.post("/listings/:id/book", isLoggedIn, wrapAsync( userController.bookListing ));
 
+router.get("/profile", isLoggedIn, wrapAsync( async (req, res) => {
+  
+  const user = await User.findById(req.user._id)
+    .populate({
+      path: "bookings",
+      populate: {
+        path: "listing"
+      },
+    });
+    // console.log("Fetching user profile for:", user.bookings.user);
+  res.render("users/profile", { user });
+}));
+
+
 module.exports = router;

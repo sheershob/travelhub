@@ -151,7 +151,6 @@ app.get('/about', (req, res) => res.render('about'));
 app.get('/privacy', (req, res) => res.render('privacy'));
 app.get('/support', (req, res) => res.render('support'));
 
-
 // Connect to MongoDB and start the server. Use sensible timeouts so failures are
 // surfaced quickly instead of silently buffering operations.
 async function startServer() {
@@ -187,15 +186,6 @@ async function startServer() {
 }
 
 startServer();
-
-// app.get('/listings', wrapAsync(async (req, res) => {
-//     try {
-//         const listings = await Listing.find({});
-//         res.render("listings/index.ejs", { listings });
-//     } catch (err) {
-//         res.status(500).send(err);
-//     }
-// }));
 
 // app.all("*", (req, res, next) => {
 //     next(new ExpressError(404,"Page Not Found")); 
