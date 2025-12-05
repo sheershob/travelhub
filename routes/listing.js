@@ -23,7 +23,6 @@ router.post("/", isLoggedIn, upload.single('image'), wrapAsync( listingControlle
 // router.post("/", isLoggedIn, upload.single('image'), (req, res) => {
 //   console.log('body:', req.body);
 //   console.log('file:', req.file);
-//   res.send('ok');
 // });
 
 //Edit Route

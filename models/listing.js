@@ -56,10 +56,16 @@ const ListingSchema = new Schema({
         required: true
       }
     },
-        createdAt: {
+    createdAt: {
         type: Date,
         default: Date.now()
     },
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Booking"
+      }
+    ]
 });
 
 const Listing = mongoose.model('Listing', ListingSchema);

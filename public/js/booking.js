@@ -7,21 +7,25 @@ document.addEventListener("DOMContentLoaded", function () {
         maxDate: new Date().fp_incr(180), // 180 days from now
         showMonths: 1,
         disableMobile: true, // Force calendar on mobile
-        onChange: function (selectedDates) {
+        onChange: function (selectedDates, dateStr) {
+            document.getElementById("datesField").value = dateStr;
+            var totalDays = 1;
             if (selectedDates.length === 2) {
                 const start = selectedDates[0];
                 const end = selectedDates[1];
 
                 const diffTime = end - start;
-                const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                const pricePerNight = parseInt(
-                    document.getElementById("pricePerNight").value
-                );
-
-                document.getElementById("totalPrice").innerText =
-                    totalDays * pricePerNight;
+                totalDays = 1 + Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             }
+                const pricePerNight = parseInt(
+                    document.querySelector("#bookingDates").dataset.price
+                );            
+            const total = totalDays * pricePerNight;
+
+            document.getElementById("totalPrice").innerText = total;
+            document.getElementById("totalPriceField").value = total;  
+            
+            bookBtn.disabled = false;
         }
     });
 });

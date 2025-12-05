@@ -41,23 +41,39 @@
     <div class="container mt-4 text-center">
   <h3>Book Your Stay</h3>
 
-        <form action="" method="post" class="mt-3 needs-validation" novalidate>
-            <div class="input-group mb-3 mt-2">
-    <span class="input-group-text"><i class="fa-regular fa-calendar"></i></span>
-    <input type="text" id="bookingDates" class="form-control" placeholder="Select dates" required>
+<form action="/listings/<%= listing._id %>/book" method="POST" class="mt-3 needs-validation" novalidate>
+
+  <div class="input-group mb-3 mt-2">
+    <span class="input-group-text">
+      <i class="fa-regular fa-calendar"></i>
+    </span>
+
+    <!-- USER DATE INPUT -->
+    <input 
+      type="text"
+      id="bookingDates"
+      class="form-control text-center"
+      placeholder="Select dates"
+      data-price="<%= listing.price %>"
+      required
+    >
   </div>
 
-  <div class="mb-3">
-    <input type="hidden" id="pricePerNight" class="form-control text-center" value="<%= listing.price %>" readonly>
-  </div>
+  <!-- ✅ HIDDEN FIELDS THAT GO TO BACKEND -->
+  <input type="hidden" name="dates" id="datesField">
+  <input type="hidden" name="totalPrice" id="totalPriceField">
 
   <div class="mb-3">
     <h5>Total Price: ₹<span id="totalPrice">0</span></h5>
   </div>
 
-  <!-- <button type="submit" class="btn btn-dark">Book Now</button> -->
-        </form>
-  
+  <% if(currentUser) { %>
+    <button type="submit" class="btn btn-dark" id="bookBtn" disabled>
+      Book Now
+    </button>
+  <% } %>
+
+</form>
 </div>
 
     <div >

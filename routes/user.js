@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/user');
 const wrapAsync = require('../utils/wrapAsync');
 const passport = require('passport');
-const { saveRedirectUrl} = require('../middleware');
+const { saveRedirectUrl, isLoggedIn} = require('../middleware');
 
 const userController = require('../controllers/user');
  
@@ -100,5 +100,7 @@ router.post('/choose-username', async (req, res, next) => {
     return res.redirect('/choose-username');
   }
 });
+
+router.post("/listings/:id/book", isLoggedIn, wrapAsync( userController.bookListing ));
 
 module.exports = router;

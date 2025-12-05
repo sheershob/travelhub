@@ -25,6 +25,12 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now()
     },
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Booking"
+      }
+    ]
 });
 
 UserSchema.plugin(passportLocalMongoose,{
